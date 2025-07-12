@@ -5,7 +5,7 @@ import { useLoginContext } from '../context/LoginContext';
 
 const Login = () => {
 
-    const {setShowUserLogin, setUser} = useLoginContext();
+    const {setShowUserLogin, setUser, setRole} = useLoginContext();
     const [state, setState] = useState("login");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -47,6 +47,8 @@ const Login = () => {
                 name: name
 
             })
+            setRole(data.data.user.role)
+            console.log(data.data.user.role);
 
         }catch(error){
             setError(error);

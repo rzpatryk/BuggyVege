@@ -11,12 +11,13 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false)
-    const {setShowUserLogin, user, setUser} = useLoginContext();
+    const {setShowUserLogin, user, setUser, role, setRole} = useLoginContext();
     const navigate = useNavigate();
 
     const logout = async () =>
     {
         setUser(null);
+        setRole(null);
         navigate("/");
         localStorage.removeItem("token");
     }
@@ -51,7 +52,13 @@ const Navbar = () => {
                     (<div className='relative group'>
                         <img src={profile_icon} className='w-10' alt=""/>
                         <ul className='hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40'>
-                            <li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>My Orders</li>
+                            {role === "user" ? 
+                                (<li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>My Orders</li>)
+                            : role === "admin" ?
+                                (<li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>Admin Panel</li>)
+                                : null
+                            }
+                            {/* <li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>My Orders</li> */}
                             <li onClick={logout} className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>Logout</li>
                         </ul>
                     </div>)
