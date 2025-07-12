@@ -55,7 +55,7 @@ const Navbar = () => {
                             {role === "user" ? 
                                 (<li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>My Orders</li>)
                             : role === "admin" ?
-                                (<li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>Admin Panel</li>)
+                                (<li  onClick={() => navigate('/AdminPanel')}className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>Admin Panel</li>)
                                 : null
                             }
                             {/* <li  className='p-1.5 pl-3 hover:bg-primary/10 cursor-pointer'>My Orders</li> */}

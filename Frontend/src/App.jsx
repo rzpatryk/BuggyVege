@@ -6,14 +6,25 @@ import Home from './pages/Home'
 import AllProducts from './pages/AllProducts'
 import RootLayout from './layout/RootLayout'
 import { useLoginContext } from './context/LoginContext'
+import AdminPanel from './pages/AdminPanel/AdminPanel'
+import AddProduct from './pages/AdminPanel/AddProduct'
+import UsersList from './pages/AdminPanel/UsersList'
+import ProductsList from './pages/AdminPanel/ProductsList'
+import Orders from './pages/AdminPanel/Orders'
 
 const App = () => {
-  const {showUserLogin} = useLoginContext();
+  const {showUserLogin, role} = useLoginContext();
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<RootLayout/>}>
         <Route index element={<Home/>}/>
         <Route path='AllProducts' element={<AllProducts/>}/>
+        <Route path="AdminPanel" element={<AdminPanel/>}>
+          <Route path="AddProduct" element={<AddProduct/>}/>
+          <Route path="UserList" element={<UsersList/>}/>
+          <Route path="ProductsList" element={<ProductsList/>}/>
+          <Route path="Orders" element={<Orders/>}/>
+        </Route>
       </Route>
     )
   )
