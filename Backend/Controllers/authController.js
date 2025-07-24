@@ -60,3 +60,58 @@ exports.login = asyncErrorHandler( async(req, res, next)=>{
             }
     })
 });
+
+// Middleware do weryfikacji JWT token
+exports.protect = asyncErrorHandler(async (req, res, next) => {
+    // 1) Sprawdź czy token istnieje
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+        const error = new CustomError('You are not logged in! Please log in to get access.', 401);
+        return next(error);
+    }
+
+    // 2) Weryfikuj token
+    const decoded = jwt.verify(token, process.env.SECRET_STR);
+
+    // 3) Sprawdź czy użytkownik nadal istnieje
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+        const error = new CustomError('The user belonging to this token no longer exists.', 401);
+        return next(error);
+    }
+
+    // 4) Sprawdź czy hasło nie zostało zmienione po wydaniu tokenu
+    if (await currentUser.isPasswordChanged(decoded.iat)) {
+        const error = new CustomError('User recently changed password! Please log in again.', 401);
+        return next(error);
+    }
+
+    // Przekaż użytkownika do następnego middleware
+    req.user = currentUser;
+    next();
+});
+
+// Middleware do autoryzacji ról
+exports.restrictTo = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            const error = new CustomError('You do not have permission to perform this action', 403);
+            return next(error);
+        }
+        next();
+    };
+};
+
+// Endpoint do sprawdzenia profilu użytkownika (chroniony)
+exports.getProfile = asyncErrorHandler(async (req, res, next) => {
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user: req.user
+        }
+    });
+});

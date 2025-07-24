@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bycrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
@@ -52,7 +52,7 @@ userSchema.pre('save', async function(next){
         return next();
     }
 
-    this.password = await bycrypt.hash(this.password, 12);
+    this.password = await bcryptjs.hash(this.password, 12);
     
     this.confirmPassword = undefined;
     next();
@@ -65,7 +65,7 @@ userSchema.pre(/^find/, function(next){
 
 
 userSchema.methods.comparePasswordInDb = async function(pswd, pswdDB){
-    return await bycrypt.compare(pswd, pswdDB);
+    return await bcryptjs.compare(pswd, pswdDB);
 }
 
 
