@@ -3,7 +3,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
 const authRouter = require('./Routes/authRouter');
-const productRouter = require('./Routes/productRouter')
+const productRouter = require('./Routes/productRouter');
+const walletRouter = require('./Routes/walletRouter');
 const globalErrorHandler = require('./Controllers/errorController')
 
 let app = express();
@@ -25,5 +26,6 @@ app.use((req, res, next)=>{
 });
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin', productRouter);
+app.use('/api/v1/wallet', walletRouter);
 app.use(globalErrorHandler);
 module.exports = app;

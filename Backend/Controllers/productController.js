@@ -82,3 +82,48 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: 'Błąd serwera przy usuwaniu produktu' });
   }
 };
+
+// Zaktualizuj produkt (tylko admin)
+exports.updateProduct = async (req, res) => {
+  try {
+    const { name, descriptions, category, price, offerPrice } = req.body;
+    
+    const updateData = {
+      name,
+      descriptions: descriptions ? descriptions.split(',').map(s => s.trim()) : undefined,
+      category,
+      price: price ? parseFloat(price) : undefined,
+      offerPrice: offerPrice ? parseFloat(offerPrice) : undefined
+    };
+
+    // Usuń undefined values
+    Object.keys(updateData).forEach(key => 
+      updateData[key] === undefined && delete updateData[key]
+    );
+
+    // Jeśli są nowe zdjęcia, zaktualizuj je
+    if (req.files && req.files.length > 0) {
+      updateData.images = req.files.map(file => file.path);
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id, 
+      updateData, 
+      { new: true, runValidators: true }
+    );
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Produkt nie został znaleziony' });
+    }
+    
+    res.status(200).json({
+      status: 'success',
+      data: {
+        product
+      }
+    });
+  } catch (error) {
+    console.error('Błąd aktualizacji produktu:', error);
+    res.status(500).json({ error: 'Błąd serwera przy aktualizacji produktu' });
+  }
+};

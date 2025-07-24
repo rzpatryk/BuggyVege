@@ -29,4 +29,11 @@ router.delete('/products/:id',
   productController.deleteProduct
 );
 
+router.put('/products/:id',
+  authController.protect,
+  authController.restrictTo('admin'),
+  upload.array('images', 4),
+  productController.updateProduct
+);
+
 module.exports = router;

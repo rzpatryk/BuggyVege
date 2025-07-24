@@ -42,6 +42,18 @@ const userSchema = new mongoose.Schema({
         default: true,
         select:false 
     },
+    // Portfel użytkownika
+    wallet: {
+        balance: {
+            type: Number,
+            default: 0,
+            min: [0, 'Saldo nie może być ujemne']
+        },
+        currency: {
+            type: String,
+            default: 'PLN'
+        }
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetTokenExpires: Date
