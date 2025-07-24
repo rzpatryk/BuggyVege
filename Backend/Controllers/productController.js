@@ -64,6 +64,28 @@ exports.getProduct = async (req, res) => {
   }
 };
 
+// Pobierz produkt z opiniami
+exports.getProductWithReviews = asyncErrorHandler(async (req, res, next) => {
+    const product = await Product.findById(req.params.id)
+        .populate({
+            path: 'reviews',
+            match: { status: 'approved' },
+            options: { sort: { createdAt: -1 }, limit: 5 }
+        });
+
+    if (!product) {
+        const error = new CustomError('Produkt o podanym ID nie istnieje', 404);
+        return next(error);
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            product
+        }
+    });
+});
+
 // Usuń produkt (tylko admin)
 exports.deleteProduct = async (req, res) => {
   try {
