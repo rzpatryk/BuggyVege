@@ -1,0 +1,136 @@
+-- Tabela użytkowników
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    photo VARCHAR(255),
+    wallet_balance DECIMAL(10,2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Tabela produktów
+CREATE TABLE products (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(100),
+    price DECIMAL(10,2) NOT NULL,
+    offer_price DECIMAL(10,2),
+    ratings_average DECIMAL(3,2) DEFAULT 0.00,
+    ratings_quantity INT DEFAULT 0,
+    rating_distribution JSON, -- [0,0,0,0,0] dla ocen 1-5
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Tabela opisów produktów
+CREATE TABLE product_descriptions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    description TEXT,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Tabela zdjęć produktów
+CREATE TABLE product_images (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    image_path VARCHAR(500),
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Tabela zamówień
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    order_number VARCHAR(50) UNIQUE NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'PLN',
+    status ENUM('pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded') DEFAULT 'pending',
+    payment_method ENUM('wallet', 'card', 'bank_transfer', 'blik') NOT NULL,
+    payment_status ENUM('pending', 'paid', 'failed', 'refunded') DEFAULT 'pending',
+    shipping_street VARCHAR(255),
+    shipping_city VARCHAR(100),
+    shipping_postal_code VARCHAR(20),
+    shipping_country VARCHAR(100) DEFAULT 'Polska',
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabela pozycji zamówienia
+CREATE TABLE order_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Tabela transakcji
+CREATE TABLE transactions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    type ENUM('deposit', 'payment', 'refund') NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'PLN',
+    description TEXT NOT NULL,
+    status ENUM('pending', 'completed', 'failed', 'cancelled') DEFAULT 'completed',
+    related_order_id INT,
+    balance_before DECIMAL(10,2) NOT NULL,
+    balance_after DECIMAL(10,2) NOT NULL,
+    payment_method VARCHAR(50),
+    external_transaction_id VARCHAR(255),
+    ip_address VARCHAR(45),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (related_order_id) REFERENCES orders(id) ON DELETE SET NULL
+);
+
+-- Tabela opinii
+CREATE TABLE reviews (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    product_id INT,
+    order_id INT,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    title VARCHAR(100) NOT NULL,
+    comment TEXT NOT NULL,
+    helpful_votes INT DEFAULT 0,
+    verified_purchase BOOLEAN DEFAULT TRUE,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    moderator_note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_product (user_id, product_id)
+);
+
+-- Tabele dla pros/cons opinii
+CREATE TABLE review_pros (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    review_id INT,
+    pro_text VARCHAR(200),
+    FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE
+);
+
+CREATE TABLE review_cons (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    review_id INT,
+    con_text VARCHAR(200),
+    FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE
+);
+
+-- Tabela zdjęć opinii
+CREATE TABLE review_images (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    review_id INT,
+    image_path VARCHAR(500),
+    FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE
+);

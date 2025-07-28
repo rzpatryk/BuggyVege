@@ -57,6 +57,31 @@ const AddProduct = () => {
   
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('category', category);
+    formData.append('price', price);
+    formData.append('offerPrice', offerPrice);
+    formData.append('descriptions', description); 
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append('images', files[i]); // nazwę musi rozpoznać multer
+    }
+  try {
+    const res = await fetch('http://localhost:3000/api/v1/admin/AddProduct', {
+    method: 'POST',
+    body: formData, // NIE ustawiaj nagłówka 'Content-Type' – browser zrobi to automatycznie
+  });
+
+  if (!res.ok) {
+    throw new Error('Błąd przy dodawaniu produktu');
+  }
+
+  const data = await res.json();
+  console.log('Produkt dodany:', data);
+  } catch (err) {
+    console.error('Błąd:', err);
+  }
   }
   
   return (
