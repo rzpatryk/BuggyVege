@@ -4,6 +4,7 @@ const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
+const { log } = require('console');
 
 const signToken = id => {
     return jwt.sign({id}, process.env.SECRET_STR, {
@@ -222,15 +223,15 @@ exports.protect = asyncErrorHandler(async (req, res, next) => {
 
         // Przekaż użytkownika do następnego middleware
         req.user = {
-            id: currentUser.id,
-            name: currentUser.name,
-            email: currentUser.email,
-            role: currentUser.role,
-            wallet: {
-                balance: currentUser.wallet_balance,
-                currency: 'PLN'
-            },
-            photo: currentUser.photo
+            id: currentUser.id
+            // name: currentUser.name,
+            // email: currentUser.email,
+            // role: currentUser.role,
+            // wallet: {
+            //     balance: currentUser.wallet_balance,
+            //     currency: 'PLN'
+            // },
+            // photo: currentUser.photo
         };
         
         next();
@@ -260,9 +261,52 @@ exports.restrictTo = (...roles) => {
         next();
     };
 };
+// Endpoint do sprawdzenia profilu użytkownika (chroniony)
+exports.getProfileTest = asyncErrorHandler(async (req, res, next) => {
+     const { userId } = req.params;
+    try {
+        // Pobierz najnowsze dane użytkownika z bazy
+        const [users] = await pool.execute(`
+            SELECT id, name, email, role, wallet_balance, photo, created_at, updated_at
+            FROM users WHERE id = ?
+        `, [userId]);
 
+        if (users.length === 0) {
+            const error = new CustomError('Użytkownik nie istnieje', 404);
+            return next(error);
+        }
+
+        const user = users[0];
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    wallet: {
+                        balance: user.wallet_balance,
+                        currency: 'PLN',
+                        //formattedBalance: `${user.wallet_balance.toFixed(2)} PLN`
+                    },
+                    photo: user.photo,
+                    createdAt: user.created_at,
+                    updatedAt: user.updated_at
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('Błąd pobierania profilu:', error);
+        const customError = new CustomError('Błąd podczas pobierania profilu użytkownika', 500);
+        return next(customError);
+    }
+});
 // Endpoint do sprawdzenia profilu użytkownika (chroniony)
 exports.getProfile = asyncErrorHandler(async (req, res, next) => {
+    log('Pobieranie profilu użytkownika:', req.user);
     try {
         // Pobierz najnowsze dane użytkownika z bazy
         const [users] = await pool.execute(`
@@ -288,7 +332,7 @@ exports.getProfile = asyncErrorHandler(async (req, res, next) => {
                     wallet: {
                         balance: user.wallet_balance,
                         currency: 'PLN',
-                        formattedBalance: `${user.wallet_balance.toFixed(2)} PLN`
+                        //formattedBalance: `${user.wallet_balance.toFixed(2)} PLN`
                     },
                     photo: user.photo,
                     createdAt: user.created_at,
