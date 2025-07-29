@@ -134,3 +134,10 @@ CREATE TABLE review_images (
     image_path VARCHAR(500),
     FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE
 );
+
+ALTER TABLE users ADD COLUMN password VARCHAR(255) NOT NULL AFTER email;
+ALTER TABLE users ADD COLUMN role ENUM('user', 'admin') DEFAULT 'user' AFTER password;
+ALTER TABLE users ADD COLUMN active BOOLEAN DEFAULT TRUE AFTER wallet_balance;
+ALTER TABLE users ADD COLUMN password_changed_at TIMESTAMP NULL AFTER active;
+ALTER TABLE users ADD COLUMN password_reset_token VARCHAR(255) NULL AFTER password_changed_at;
+ALTER TABLE users ADD COLUMN password_reset_expires TIMESTAMP NULL AFTER password_reset_token;

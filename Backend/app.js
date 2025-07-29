@@ -6,6 +6,10 @@ const authRouter = require('./Routes/authRouter');
 const productRouter = require('./Routes/productRouter');
 const walletRouter = require('./Routes/walletRouter');
 const reviewRouter = require('./Routes/reviewRouter');
+const authRouterMysql = require('./RoutesMySql/authRouterMysql');
+const productRouterMysql = require('./RoutesMySql/productRouterMysql');
+const walletRouterMysql = require('./RoutesMySql/walletRouterMysql');
+const reviewRouterMysql = require('./RoutesMySql/reviewRouterMysql');
 const globalErrorHandler = require('./Controllers/errorController')
 
 let app = express();
@@ -29,5 +33,9 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin', productRouter);
 app.use('/api/v1/wallet', walletRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v2/auth', authRouterMysql);
+app.use('/api/v2/admin', productRouterMysql);
+app.use('/api/v2/wallet', walletRouterMysql);
+app.use('/api/v2/reviews', reviewRouterMysql);
 app.use(globalErrorHandler);
 module.exports = app;
