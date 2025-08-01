@@ -2,15 +2,16 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
-const authRouter = require('./Routes/authRouter');
-const productRouter = require('./Routes/productRouter');
-const walletRouter = require('./Routes/walletRouter');
-const reviewRouter = require('./Routes/reviewRouter');
-const authRouterMysql = require('./RoutesMySql/authRouterMysql');
-const productRouterMysql = require('./RoutesMySql/productRouterMysql');
-const walletRouterMysql = require('./RoutesMySql/walletRouterMysql');
-const reviewRouterMysql = require('./RoutesMySql/reviewRouterMysql');
-const globalErrorHandler = require('./Controllers/errorController')
+const authRouter = require('./MongodbJWT/Routes/authRouter');
+const productRouter = require('./MongodbJWT/Routes/productRouter');
+const walletRouter = require('./MongodbJWT/Routes/walletRouter');
+const reviewRouter = require('./MongodbJWT/Routes/reviewRouter');
+const globalErrorHandler = require('./MongodbJWT/Controllers/errorController')
+
+const authRouterMysql = require('./MysqlJWT/Routes/authRouter');
+const productRouterMysql = require('./MysqlJWT/Routes/productRouter');
+const walletRouterMysql = require('./MysqlJWT/Routes/walletRouter');
+const reviewRouterMysql = require('./MysqlJWT/Routes/reviewRouter');
 
 let app = express();
 
@@ -33,6 +34,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin', productRouter);
 app.use('/api/v1/wallet', walletRouter);
 app.use('/api/v1/reviews', reviewRouter);
+
 app.use('/api/v2/auth', authRouterMysql);
 app.use('/api/v2/admin', productRouterMysql);
 app.use('/api/v2/wallet', walletRouterMysql);

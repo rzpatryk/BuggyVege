@@ -2,8 +2,8 @@ const User = require('../Models/userModel');
 const Transaction = require('../Models/Transaction');
 const Order = require('../Models/Order');
 const Product = require('../Models/Product');
-const asyncErrorHandler = require('../Utils/asyncErrorHandler');
-const CustomError = require('../Utils/CustomError');
+const asyncErrorHandler = require('../../Utils/asyncErrorHandler');
+const CustomError = require('../../Utils/CustomError');
 
 // Sprawdz saldo portfela
 exports.getWalletBalance = asyncErrorHandler(async (req, res, next) => {

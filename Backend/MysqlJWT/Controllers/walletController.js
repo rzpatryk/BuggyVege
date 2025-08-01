@@ -1,6 +1,6 @@
-const { pool } = require('../database');
-const asyncErrorHandler = require('../Utils/asyncErrorHandler');
-const CustomError = require('../Utils/CustomError');
+const { pool } = require('../../database');
+const asyncErrorHandler = require('../../Utils/asyncErrorHandler');
+const CustomError = require('../../Utils/CustomError');
 
 // Sprawdź saldo portfela
 exports.getWalletBalance = asyncErrorHandler(async (req, res, next) => {

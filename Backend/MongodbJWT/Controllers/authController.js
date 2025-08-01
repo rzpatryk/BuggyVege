@@ -1,7 +1,7 @@
 const User = require('./../Models/userModel');
 const jwt = require('jsonwebtoken');
-const asyncErrorHandler = require('./../Utils/asyncErrorHandler');
-const CustomError = require('./../Utils/CustomError');
+const asyncErrorHandler = require('./../../Utils/asyncErrorHandler');
+const CustomError = require('./../../Utils/CustomError');
 
 const signToken = id => {
     return jwt.sign({id}, process.env.SECRET_STR,{

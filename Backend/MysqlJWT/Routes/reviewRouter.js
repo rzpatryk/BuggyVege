@@ -1,6 +1,6 @@
 const express = require('express');
-const reviewController = require('../MysqlControllers/reviewController');
-const authController = require('../MysqlControllers/authController');
+const reviewController = require('../Controllers/reviewController');
+const authController = require('../Controllers/authController');
 
 const router = express.Router();
 

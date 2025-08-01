@@ -1,6 +1,6 @@
 const Product = require('../Models/Product');
-const asyncErrorHandler = require('../Utils/asyncErrorHandler');
-const CustomError = require('../Utils/CustomError');
+const asyncErrorHandler = require('../../Utils/asyncErrorHandler');
+const CustomError = require('../../Utils/CustomError');
 exports.addProduct = async (req, res) => {
   try {
     const { name, descriptions, category, price, offerPrice } = req.body;

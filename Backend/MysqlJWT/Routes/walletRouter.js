@@ -1,6 +1,6 @@
 const express = require('express');
-const walletController = require('../MysqlControllers/walletController');
-const authController = require('../MysqlControllers/authController');
+const walletController = require('../Controllers/walletController');
+const authController = require('../Controllers/authController');
 
 const router = express.Router();
 

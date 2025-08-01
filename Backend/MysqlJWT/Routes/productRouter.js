@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
-const productController = require('../MysqlControllers/productController');
-const authController = require('../MysqlControllers/authController');
+const productController = require('../Controllers/productController');
+const authController = require('../Controllers/authController');
 
 const router = express.Router();
 

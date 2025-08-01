@@ -1,9 +1,9 @@
-const { pool } = require('../database');
+const { pool } = require('../../database');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const crypto = require('crypto');
-const asyncErrorHandler = require('../Utils/asyncErrorHandler');
-const CustomError = require('../Utils/CustomError');
+const asyncErrorHandler = require('../../Utils/asyncErrorHandler');
+const CustomError = require('../../Utils/CustomError');
 const { log } = require('console');
 
 const signToken = id => {

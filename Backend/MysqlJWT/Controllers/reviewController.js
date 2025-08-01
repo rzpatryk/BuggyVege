@@ -1,6 +1,6 @@
-const pool = require('../database');
-const asyncErrorHandler = require('../Utils/asyncErrorHandler');
-const CustomError = require('../Utils/CustomError');
+const pool = require('../../database');
+const asyncErrorHandler = require('../../Utils/asyncErrorHandler');
+const CustomError = require('../../Utils/CustomError');
 const multer = require('multer');
 const path = require('path');
 

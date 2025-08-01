@@ -1,4 +1,4 @@
-const CustomError = require('./../Utils/CustomError');
+const CustomError = require('../../Utils/CustomError');
 
 const devErrors = (res, error) => {
     res.status(error.statusCode).json({

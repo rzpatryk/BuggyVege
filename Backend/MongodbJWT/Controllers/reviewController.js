@@ -1,8 +1,8 @@
 const Review = require('../Models/Review');
 const Order = require('../Models/Order');
 const Product = require('../Models/Product');
-const asyncErrorHandler = require('../Utils/asyncErrorHandler');
-const CustomError = require('../Utils/CustomError');
+const asyncErrorHandler = require('../../Utils/asyncErrorHandler');
+const CustomError = require('../../Utils/CustomError');
 const multer = require('multer');
 const path = require('path');
 
