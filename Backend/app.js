@@ -15,6 +15,9 @@ const walletRouterMysql = require('./MysqlJWT/Routes/walletRouter');
 const reviewRouterMysql = require('./MysqlJWT/Routes/reviewRouter');
 
 const authRouterMysqlSession = require('./MysqlSession/Routes/authRouter');
+const productRouterMysqlSession = require('./MysqlSession/Routes/productRouter');
+const walletRouterMysqlSession = require('./MysqlSession/Routes/walletRouter');
+const reviewRouterMysqlSession = require('./MysqlSession/Routes/reviewRouter');
 
 let app = express();
 
@@ -49,8 +52,8 @@ app.use('/api/v3', session({
   cookie: { secure: false } // Ustaw true jeśli używasz HTTPS
 }));
 app.use('/api/v3/auth', authRouterMysqlSession);
-//app.use('/api/v3/admin', productRouterMysql);
-//app.use('/api/v3/wallet', walletRouterMysql);
-//app.use('/api/v3/reviews', reviewRouterMysql);
-//app.use(globalErrorHandler);
+app.use('/api/v3/admin', productRouterMysqlSession);
+app.use('/api/v3/wallet', walletRouterMysqlSession);
+app.use('/api/v3/reviews', reviewRouterMysqlSession);
+app.use(globalErrorHandler);
 module.exports = app;
