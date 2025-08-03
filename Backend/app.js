@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
 const authRouter = require('./MongodbJWT/Routes/authRouter');
@@ -12,6 +13,8 @@ const authRouterMysql = require('./MysqlJWT/Routes/authRouter');
 const productRouterMysql = require('./MysqlJWT/Routes/productRouter');
 const walletRouterMysql = require('./MysqlJWT/Routes/walletRouter');
 const reviewRouterMysql = require('./MysqlJWT/Routes/reviewRouter');
+
+const authRouterMysqlSession = require('./MysqlSession/Routes/authRouter');
 
 let app = express();
 
@@ -39,5 +42,15 @@ app.use('/api/v2/auth', authRouterMysql);
 app.use('/api/v2/admin', productRouterMysql);
 app.use('/api/v2/wallet', walletRouterMysql);
 app.use('/api/v2/reviews', reviewRouterMysql);
-app.use(globalErrorHandler);
+app.use('/api/v3', session({
+  secret: 'tajny_klucz_sesji',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Ustaw true jeśli używasz HTTPS
+}));
+app.use('/api/v3/auth', authRouterMysqlSession);
+//app.use('/api/v3/admin', productRouterMysql);
+//app.use('/api/v3/wallet', walletRouterMysql);
+//app.use('/api/v3/reviews', reviewRouterMysql);
+//app.use(globalErrorHandler);
 module.exports = app;
