@@ -19,6 +19,8 @@ const productRouterMysqlSession = require('./MysqlSession/Routes/productRouter')
 const walletRouterMysqlSession = require('./MysqlSession/Routes/walletRouter');
 const reviewRouterMysqlSession = require('./MysqlSession/Routes/reviewRouter');
 
+const testRoute = require('./TestRefactor/Routes/AuthRoute');
+
 let app = express();
 
 
@@ -55,5 +57,15 @@ app.use('/api/v3/auth', authRouterMysqlSession);
 app.use('/api/v3/admin', productRouterMysqlSession);
 app.use('/api/v3/wallet', walletRouterMysqlSession);
 app.use('/api/v3/reviews', reviewRouterMysqlSession);
+
+app.use('/api/v4', session({
+  secret: 'tajny_klucz_sesji',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Ustaw true jeśli używasz HTTPS
+}));
+app.use('/api/v4/auth', testRoute);
+
+
 app.use(globalErrorHandler);
 module.exports = app;
