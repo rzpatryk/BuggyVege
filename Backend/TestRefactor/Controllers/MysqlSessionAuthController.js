@@ -3,7 +3,7 @@ const MySQLAdapter = require('../Database/User/MySQLAdapter');
 const AuthService = require('../Services/authService');
 const { pool } = require('../../database');
 
-class SessionAuthController extends BaseAuthController {
+class MysqlSessionAuthController extends BaseAuthController {
     constructor() {
         const dbAdapter = new MySQLAdapter(pool);
         const authService = new AuthService(dbAdapter);
@@ -11,4 +11,4 @@ class SessionAuthController extends BaseAuthController {
     }
 }
 
-module.exports = SessionAuthController;
+module.exports = MysqlSessionAuthController;
