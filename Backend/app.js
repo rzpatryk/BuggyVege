@@ -18,9 +18,11 @@ const authRouterMysqlSession = require('./MysqlSession/Routes/authRouter');
 const productRouterMysqlSession = require('./MysqlSession/Routes/productRouter');
 const walletRouterMysqlSession = require('./MysqlSession/Routes/walletRouter');
 const reviewRouterMysqlSession = require('./MysqlSession/Routes/reviewRouter');
-const MongoSessionRoutes = require('./TestRefactor/Routes/MongoSessionRoutes');
+
+const mongoSessionRoutes = require('./TestRefactor/Routes/MongoSessionRoutes');
 const mongoJWTAuthRoute = require('./TestRefactor/Routes/MongoJWTRoutes');
-const testRoute = require('./TestRefactor/Routes/MysqlSessionRoutes');
+
+const mysqlSessionRoutes = require('./TestRefactor/Routes/MysqlSessionRoutes');
 const mysqlJWTAuthRoute = require('./TestRefactor/Routes/MysqlJWTRoutes');
 let app = express();
 
@@ -65,14 +67,15 @@ app.use('/api/v4', session({
   saveUninitialized: true,
   cookie: { secure: false } // Ustaw true jeśli używasz HTTPS
 }));
-app.use('/api/v4/auth', testRoute);
+app.use('/api/v4/auth', mysqlSessionRoutes);
+
 app.use('/api/v5', session({
   secret: 'tajny_klucz_sesji',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
 }));
-app.use('/api/v5/auth', MongoSessionRoutes); // MongoDB + Sessions
+app.use('/api/v5/auth', mongoSessionRoutes); // MongoDB + Sessions
 
 app.use('/api/v6/auth', mongoJWTAuthRoute); // MongoDB + JWT
 app.use('/api/v7/auth', mysqlJWTAuthRoute); // MySQL + JWT (NOWY)

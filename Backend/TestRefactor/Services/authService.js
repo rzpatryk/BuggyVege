@@ -1,4 +1,5 @@
 const bcryptjs = require('bcryptjs');
+
 const crypto = require('crypto');
 
 class AuthService {
@@ -7,11 +8,20 @@ class AuthService {
     }
 
     async register(userData) {
-        const { name, email, password, role = 'user' } = userData;
-        
+        const { name, email, password, confirmPassword, role = 'user' } = userData;
+        console.log(name, email, password, confirmPassword, role);
+
         // Walidacja
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !confirmPassword) {
             throw new Error('Wszystkie pola są wymagane');
+        }
+
+        if (password !== confirmPassword) {
+            throw new Error('Hasła nie są identyczne');
+        }
+
+        if (password.length < 8) {
+            throw new Error('Hasło musi mieć co najmniej 8 znaków');
         }
 
         // Sprawdź czy użytkownik istnieje
@@ -22,8 +32,6 @@ class AuthService {
 
         // Hash hasła
         const hashedPassword = await bcryptjs.hash(password, 12);
-        
-        // Utwórz użytkownika
         const userId = await this.db.createUser({
             name,
             email,

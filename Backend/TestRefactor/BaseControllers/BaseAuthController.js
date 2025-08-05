@@ -9,6 +9,7 @@ class BaseAuthController {
     register = asyncErrorHandler(async (req, res, next) => {
         try {
             const user = await this.authService.register(req.body);
+        
             
             // Utwórz sesję
             req.session.userId = user.id;

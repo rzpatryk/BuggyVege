@@ -29,13 +29,13 @@ const userSchema = new mongoose.Schema({
     },
     confirmPassword:{
         type: String,
-        required: [true, 'Please confirm your password.'],
-        validate: {
-            validator: function(val){
-                return val == this.password;
-            },
-            message: 'Password and Confirm Password does not match!'
-        }
+        //required: [true, 'Please confirm your password.'],
+        // validate: {
+        //     validator: function(val){
+        //         return val == this.password;
+        //     },
+        //     message: 'Password and Confirm Password does not match!'
+        // }
     },
     active: {
         type: Boolean,
@@ -59,16 +59,16 @@ const userSchema = new mongoose.Schema({
     passwordResetTokenExpires: Date
 })
 
-userSchema.pre('save', async function(next){
-    if(!this.isModified('password')){
-        return next();
-    }
+// userSchema.pre('save', async function(next){
+//     if(!this.isModified('password')){
+//         return next();
+//     }
 
-    this.password = await bcryptjs.hash(this.password, 12);
+//     this.password = await bcryptjs.hash(this.password, 12);
     
-    this.confirmPassword = undefined;
-    next();
-})
+//     this.confirmPassword = undefined;
+//     next();
+// })
 
 userSchema.pre(/^find/, function(next){
     this.find({active: {$ne: false}});

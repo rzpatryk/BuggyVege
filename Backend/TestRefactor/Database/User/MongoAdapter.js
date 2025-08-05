@@ -100,12 +100,16 @@ class MongoAdapter extends DatabaseAdapter {
     }
 
     async clearPasswordResetToken(userId) {
-        await User.findByIdAndUpdate(userId, {
-            passwordResetToken: undefined,
-            passwordResetTokenExpires: undefined,
+    await User.findByIdAndUpdate(userId, {
+        $unset: {
+            passwordResetToken: 1,
+            passwordResetTokenExpires: 1
+        },
+        $set: {
             updatedAt: new Date()
-        });
-    }
+        }
+    });
+}
 }
 
 module.exports = MongoAdapter;
