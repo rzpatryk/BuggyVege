@@ -1,5 +1,5 @@
 const DatabaseAdapter = require('./DatabaseAdapter');
-const User = require('../../../MongodbJWT/Models/userModel');
+const User = require('../../Models/userModel'); // Import the User model
 
 class MongoAdapter extends DatabaseAdapter {
     async createUser(userData) {
