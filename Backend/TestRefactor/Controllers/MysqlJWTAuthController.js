@@ -1,5 +1,5 @@
 const BaseAuthController = require('../BaseControllers/BaseAuthController');
-const MySQLAdapter = require('../Database/User/MySQLAdapter');
+const MySQLAdapter = require('../Database/AuthAdapters/MySQLAdapter');
 const AuthService = require('../Services/authService');
 const jwt = require('jsonwebtoken');
 const asyncErrorHandler = require('../../Utils/asyncErrorHandler');

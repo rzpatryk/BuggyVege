@@ -1,5 +1,5 @@
 const BaseAuthController = require('../BaseControllers/BaseAuthController'); // Usuń duplikat
-const MySQLAdapter = require('../Database/User/MySQLAdapter');
+const MySQLAdapter = require('../Database/AuthAdapters/MySQLAdapter');
 const AuthService = require('../Services/authService');
 const { pool } = require('../../database');
 

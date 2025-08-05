@@ -1,5 +1,5 @@
 const BaseAuthController = require('../BaseControllers/BaseAuthController');
-const MongoAdapter = require('../Database/User/MongoAdapter');
+const MongoAdapter = require('../Database/AuthAdapters/MongoAdapter');
 const AuthService = require('../Services/authService');
 
 class MongoSessionAuthController extends BaseAuthController {
