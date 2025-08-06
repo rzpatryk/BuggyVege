@@ -2,10 +2,13 @@ const express = require('express');
 const MongoSessionAuthController = require('./../Controllers/MongoSessionAuthController');
 const MongoSessionProductController = require('../Controllers/ProductControllers/MongoSessionProductController');
 const MongoSessionWalletController = require('../Controllers/WalletControllers/MongoSessionWalletController');
+const MongoSessionReviewController = require('../Controllers/ReviewControllers/MongoSessionReviewController');
+const { uploadReviewImages } = require('../Utils/multerConfig');
 const router = express.Router();
 const authController = new MongoSessionAuthController();
 const productController = new MongoSessionProductController();
 const walletController = new MongoSessionWalletController();
+const reviewController = new MongoSessionReviewController();
 // Auth routes
 router.post('/register', authController.register);
 router.post('/login', authController.login);
@@ -31,4 +34,18 @@ router.post('/wallet/purchase', authController.protect, walletController.purchas
 router.get('/wallet/orders', authController.protect, walletController.getOrderHistory);
 router.get('/wallet/orders/:orderId', authController.protect, walletController.getOrderDetails);
 router.post('/wallet/refund', authController.protect, walletController.refundOrder);
+
+// Review routes
+router.post('/reviews', authController.protect, uploadReviewImages, reviewController.createReview);
+router.get('/products/:productId/reviews', reviewController.getProductReviews);
+router.get('/reviews/my-reviews', authController.protect, reviewController.getUserReviews);
+router.get('/reviews/products-to-review', authController.protect, reviewController.getProductsToReview);
+router.put('/reviews/:reviewId', authController.protect, reviewController.updateReview);
+router.delete('/reviews/:reviewId', authController.protect, reviewController.deleteReview);
+router.post('/reviews/:reviewId/helpful', reviewController.markReviewHelpful);
+
+// Admin review routes
+router.get('/admin/reviews/pending', authController.protect, authController.restrict('admin'), reviewController.getPendingReviews);
+router.put('/admin/reviews/:reviewId/moderate', authController.protect, authController.restrict('admin'), reviewController.moderateReview);
+
 module.exports = router;

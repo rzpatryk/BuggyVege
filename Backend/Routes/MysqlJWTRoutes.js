@@ -1,9 +1,14 @@
 const express = require('express');
 const MysqlJWTAuthController = require('../Controllers/MysqlJWTAuthController');
 const MysqlJWTProductController = require('../Controllers/ProductControllers/MysqlJWTProductController');
+const MysqlJWTWalletController = require('../Controllers/WalletControllers/MysqlJWTWalletController');
+const MysqlJWTReviewController = require('../Controllers/ReviewControllers/MysqlJWTReviewController');
+const { uploadReviewImages } = require('../Utils/multerConfig');
 const router = express.Router();
 const authController = new MysqlJWTAuthController();
 const productController = new MysqlJWTProductController();
+const walletController = new MysqlJWTWalletController();
+const reviewController = new MysqlJWTReviewController();
 
 // Routes dla MySQL z JWT
 router.post('/register', authController.register);
@@ -22,5 +27,25 @@ router.post('/addProducts', authController.protect, authController.restrict('adm
 router.put('/updateProducts/:id', authController.protect, authController.restrict('admin'), productController.updateProduct);
 router.delete('/deleteProducts/:id', authController.protect, authController.restrict('admin'), productController.deleteProduct);
 
+// Wallet routes
+router.get('/wallet/balance', authController.protect, walletController.getWalletBalance);
+router.post('/wallet/deposit', authController.protect, walletController.depositToWallet);
+router.get('/wallet/transactions', authController.protect, walletController.getTransactionHistory);
+router.post('/wallet/purchase', authController.protect, walletController.purchaseWithWallet);
+router.get('/wallet/orders', authController.protect, walletController.getOrderHistory);
+router.get('/wallet/orders/:orderId', authController.protect, walletController.getOrderDetails);
+router.post('/wallet/refund', authController.protect, walletController.refundOrder);
 
+// Review routes
+router.post('/reviews', authController.protect, uploadReviewImages, reviewController.createReview);
+router.get('/products/:productId/reviews', reviewController.getProductReviews);
+router.get('/reviews/my-reviews', authController.protect, reviewController.getUserReviews);
+router.get('/reviews/products-to-review', authController.protect, reviewController.getProductsToReview);
+router.put('/reviews/:reviewId', authController.protect, reviewController.updateReview);
+router.delete('/reviews/:reviewId', authController.protect, reviewController.deleteReview);
+router.post('/reviews/:reviewId/helpful', reviewController.markReviewHelpful);
+
+// Admin review routes
+router.get('/admin/reviews/pending', authController.protect, authController.restrict('admin'), reviewController.getPendingReviews);
+router.put('/admin/reviews/:reviewId/moderate', authController.protect, authController.restrict('admin'), reviewController.moderateReview);
 module.exports = router;
