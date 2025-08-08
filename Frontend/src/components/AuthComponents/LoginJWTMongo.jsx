@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
-import { useLoginContext } from '../context/LoginContext';
+import { useLoginContext } from '../../context/LoginContext';
     
 
 
 const Login = () => {
 
-    const {setShowUserLogin, setUser, setRole} = useLoginContext();
+    const {setShowUserLogin, setUser, setRole, mode} = useLoginContext();
     const [state, setState] = useState("login");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [postResponse, setPostResponse] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false); 
@@ -22,7 +23,7 @@ const Login = () => {
         setPostResponse(null);
 
          try{
-            const response = await fetch('http://localhost:3000/api/v1/auth/login', {
+            const response = await fetch('http://localhost:3000/api/v6/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
@@ -41,7 +42,9 @@ const Login = () => {
             setPostResponse(data);
             console.log(data);
             setShowUserLogin(false);
+            
             localStorage.setItem("token", data.token);
+            
             setUser({
                 email: email,
                 name: name
@@ -63,9 +66,8 @@ const Login = () => {
         setLoading(true);
         setError(null);
         setPostResponse(null);
-
         try{
-            const response = await fetch('http://localhost:3000/api/v1/auth/signup', {
+            const response = await fetch('http://localhost:3000/api/v6/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
@@ -74,7 +76,7 @@ const Login = () => {
                     "name": name,
                     "email": email,
                     "password": password,
-                    "confirmPassword":password
+                    "confirmPassword": confirmPassword
                 })
             });
             if(!response.ok){
@@ -86,7 +88,15 @@ const Login = () => {
             setPostResponse(data);
             console.log(data);
             setShowUserLogin(false);
+           -
             localStorage.setItem("token", data.token);
+           
+            setUser({
+                email: email,
+                name: name
+
+            })
+            setRole(data.data.user.role)
         }catch(error){
             setError(error);
         }finally{
@@ -115,6 +125,12 @@ const Login = () => {
                 <p>Password</p>
                 <input onChange={(e) => setPassword(e.target.value)} value={password} placeholder="type here" className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary" type="password" required />
             </div>
+            {state === "register" && (
+                <div className="w-full ">
+                    <p>Confirm Password</p>
+                    <input onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} placeholder="type here" className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary" type="password" required />
+                </div>
+            )}
             {state === "register" ? (
                 <p>
                     Already have account? <span onClick={() => setState("login")} className="text-primary cursor-pointer">click here</span>

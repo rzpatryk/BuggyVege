@@ -11,15 +11,36 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false)
-    const {setShowUserLogin, user, setUser, role, setRole} = useLoginContext();
+    const {setShowUserLogin, user, setUser, role, setRole, mode} = useLoginContext();
     const navigate = useNavigate();
 
     const logout = async () =>
     {
-        setUser(null);
-        setRole(null);
-        navigate("/");
-        localStorage.removeItem("token");
+        if(mode === "MongoJWT"){
+            const response = await fetch('http://localhost:3000/api/v6/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+            localStorage.removeItem("token");
+        }else if(mode === "MongoSession"){
+            const response = await fetch('http://localhost:3000/api/v5/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+        }
     }
     return (
         <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">

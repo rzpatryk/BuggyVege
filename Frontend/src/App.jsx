@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from './components/NavBar'
-import Login from './components/Login'
+import Login from './components/AuthComponents/LoginJWTMongo'
+import LoginSessionMongo from './components/AuthComponents/LoginSessionMongo'
 import { Routes, Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home'
 import AllProducts from './pages/AllProducts'
@@ -31,7 +32,7 @@ const App = () => {
 
   return (
     <div className='text-default min-h-screen text-gray-700 bg-white'>
-      {showUserLogin ? <Login/> : null}
+      {showUserLogin ? <LoginSessionMongo/> : null}
       <RouterProvider router={router}/>
     </div>
     
