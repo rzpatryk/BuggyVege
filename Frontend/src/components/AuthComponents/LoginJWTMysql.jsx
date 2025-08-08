@@ -3,7 +3,7 @@ import { useLoginContext } from '../../context/LoginContext';
     
 
 
-const LoginJWTMongo = () => {
+const LoginJWTMysql = () => {
 
     const {setShowUserLogin, setUser, setRole, mode} = useLoginContext();
     const [state, setState] = useState("login");
@@ -23,7 +23,7 @@ const LoginJWTMongo = () => {
         setPostResponse(null);
 
          try{
-            const response = await fetch('http://localhost:3000/api/v6/auth/login', {
+            const response = await fetch('http://localhost:3000/api/v7/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
@@ -67,7 +67,7 @@ const LoginJWTMongo = () => {
         setError(null);
         setPostResponse(null);
         try{
-            const response = await fetch('http://localhost:3000/api/v6/auth/register', {
+            const response = await fetch('http://localhost:3000/api/v7/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
@@ -154,4 +154,4 @@ const LoginJWTMongo = () => {
   )
 }
 
-export default LoginJWTMongo;
+export default LoginJWTMysql

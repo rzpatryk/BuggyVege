@@ -3,9 +3,9 @@ import { useLoginContext } from '../../context/LoginContext';
     
 
 
-const LoginJWTMongo = () => {
+const LoginSessionMysql = () => {
 
-    const {setShowUserLogin, setUser, setRole, mode} = useLoginContext();
+    const {setShowUserLogin, setUser, setRole} = useLoginContext();
     const [state, setState] = useState("login");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -23,10 +23,11 @@ const LoginJWTMongo = () => {
         setPostResponse(null);
 
          try{
-            const response = await fetch('http://localhost:3000/api/v6/auth/login', {
+            const response = await fetch('http://localhost:3000/api/v4/auth/login', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                    'Content-Type' : 'application/json',
+                    'Content-Type' : 'application/json'
                 },
                 body: JSON.stringify({
                     "email": email,
@@ -42,9 +43,7 @@ const LoginJWTMongo = () => {
             setPostResponse(data);
             console.log(data);
             setShowUserLogin(false);
-            
-            localStorage.setItem("token", data.token);
-            
+            //localStorage.setItem("token", data.token);
             setUser({
                 email: email,
                 name: name
@@ -66,11 +65,13 @@ const LoginJWTMongo = () => {
         setLoading(true);
         setError(null);
         setPostResponse(null);
+
         try{
-            const response = await fetch('http://localhost:3000/api/v6/auth/register', {
+            const response = await fetch('http://localhost:3000/api/v4/auth/register', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                    'Content-Type' : 'application/json',
+                    'Content-Type' : 'application/json'
                 },
                 body: JSON.stringify({
                     "name": name,
@@ -88,9 +89,7 @@ const LoginJWTMongo = () => {
             setPostResponse(data);
             console.log(data);
             setShowUserLogin(false);
-           -
-            localStorage.setItem("token", data.token);
-           
+            //localStorage.setItem("token", data.token);
             setUser({
                 email: email,
                 name: name
@@ -154,4 +153,4 @@ const LoginJWTMongo = () => {
   )
 }
 
-export default LoginJWTMongo;
+export default LoginSessionMysql

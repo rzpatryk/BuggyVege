@@ -40,6 +40,30 @@ const Navbar = () => {
             setUser(null);
             setRole(null);
             navigate("/");
+        }else if(mode === "MysqlSession"){
+            const response = await fetch('http://localhost:3000/api/v4/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+        }else if(mode === "MysqlJWT"){
+            const response = await fetch('http://localhost:3000/api/v7/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+            localStorage.removeItem("token");
         }
     }
     return (

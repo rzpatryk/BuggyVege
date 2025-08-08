@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from './components/NavBar'
-import Login from './components/AuthComponents/LoginJWTMongo'
+import LoginJWTMongo from './components/AuthComponents/LoginJWTMongo'
 import LoginSessionMongo from './components/AuthComponents/LoginSessionMongo'
 import { Routes, Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home'
@@ -12,6 +12,8 @@ import AddProduct from './pages/AdminPanel/AddProduct'
 import UsersList from './pages/AdminPanel/UsersList'
 import ProductsList from './pages/AdminPanel/ProductsList'
 import Orders from './pages/AdminPanel/Orders'
+import LoginSessionMysql from './components/AuthComponents/LoginSessionMysql'
+import LoginJWTMysql from './components/AuthComponents/LoginJWTMysql'
 
 const App = () => {
   const {showUserLogin, role} = useLoginContext();
@@ -32,7 +34,7 @@ const App = () => {
 
   return (
     <div className='text-default min-h-screen text-gray-700 bg-white'>
-      {showUserLogin ? <LoginSessionMongo/> : null}
+      {showUserLogin ? <LoginJWTMysql/> : null}
       <RouterProvider router={router}/>
     </div>
     
