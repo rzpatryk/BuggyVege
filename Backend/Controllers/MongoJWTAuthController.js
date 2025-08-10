@@ -149,11 +149,11 @@ class MongoJWTAuthController extends BaseAuthController {
             const result = await this.authService.resetPassword(token, newPassword);
 
             // Generuj nowy JWT token po resecie hasła
-            const loginToken = this.signToken(result.userId);
+            //const loginToken = this.signToken(result.userId);
 
             res.status(200).json({
                 status: 'success',
-                token: loginToken,
+                //token: loginToken,
                 message: result.message
             });
         } catch (error) {

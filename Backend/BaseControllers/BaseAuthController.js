@@ -203,7 +203,7 @@ class BaseAuthController {
             const result = await this.authService.resetPassword(token, newPassword);
 
             // Utwórz sesję dla użytkownika po resecie hasła
-            req.session.userId = result.userId;
+            //req.session.userId = result.userId;
 
             res.status(200).json({
                 status: 'success',
