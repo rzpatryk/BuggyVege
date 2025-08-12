@@ -71,7 +71,7 @@ class BaseAuthController {
                 return next(error);
             }
             
-            res.clearCookie('connect.sid');
+            res.clearCookie('connect.sid', { path: '/' });
             res.status(200).json({
                 status: 'success',
                 message: 'Zostałeś pomyślnie wylogowany'

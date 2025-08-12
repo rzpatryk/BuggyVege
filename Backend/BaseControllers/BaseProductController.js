@@ -7,9 +7,9 @@ class BaseProductController {
     }
 
     addProduct = asyncErrorHandler(async (req, res, next) => {
+        console.log(req.body);
         try {
             const { name, descriptions, category, price, offerPrice } = req.body;
-            
             // req.files jest uzupełnione przez multer w routerze
             const imagePaths = req.files ? req.files.map(file => file.path) : [];
 

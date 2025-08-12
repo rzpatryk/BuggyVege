@@ -7,7 +7,9 @@ class MongoProductAdapter extends ProductDatabaseAdapter {
         
         const product = await Product.create({
             name,
-            descriptions: descriptions.split(',').map(s => s.trim()),
+           descriptions: Array.isArray(descriptions)
+            ? descriptions.map(s => s.trim())
+            : descriptions.split(',').map(s => s.trim()),
             category,
             price: parseFloat(price),
             offerPrice: parseFloat(offerPrice),

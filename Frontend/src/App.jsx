@@ -1,7 +1,5 @@
 import React from 'react'
 import Navbar from './components/NavBar'
-import LoginJWTMongo from './components/AuthComponents/LoginJWTMongo'
-import LoginSessionMongo from './components/AuthComponents/LoginSessionMongo'
 import { Routes, Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home'
 import AllProducts from './pages/AllProducts'
@@ -12,11 +10,9 @@ import AddProduct from './pages/AdminPanel/AddProduct'
 import UsersList from './pages/AdminPanel/UsersList'
 import ProductsList from './pages/AdminPanel/ProductsList'
 import Orders from './pages/AdminPanel/Orders'
-import LoginSessionMysql from './components/AuthComponents/LoginSessionMysql'
-import LoginJWTMysql from './components/AuthComponents/LoginJWTMysql'
 import AuthForm from './components/AuthComponents/AuthForm'
 
-const endpoints = {
+const endpointsAuth = {
   MysqlJWT:{
     loginUrl: 'http://localhost:3000/api/v7/auth/login',
     registerUrl: 'http://localhost:3000/api/v7/auth/register',
@@ -64,7 +60,27 @@ const endpoints = {
         }
       }
     }
+    const endpointsProducts= {
+      MongoJWT:{
+        addProductUrl: 'http://localhost:3000/api/v6/auth/addProducts',
+        fetchOptions: {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      },
+      MongoSession:{
+        addProductUrl: 'http://localhost:3000/api/v5/auth/addProducts',
+        fetchOptions: {
+          credentials: 'include',
+          headers: {
+            //'Authorization': `Bearer ${localStorage.getItem("token")}`
+            //'Content-Type': 'application/json'
+          }
+        }
+      }
 
+    }
 
 const App = () => {
   const {showUserLogin, role,mode} = useLoginContext();
@@ -74,7 +90,10 @@ const App = () => {
         <Route index element={<Home/>}/>
         <Route path='AllProducts' element={<AllProducts/>}/>
         <Route path="AdminPanel" element={<AdminPanel/>}>
-          <Route path="AddProduct" element={<AddProduct/>}/>
+          <Route path="AddProduct" element={<AddProduct
+          addProductUrl={endpointsProducts[mode].addProductUrl}
+          fetchOptions={endpointsProducts[mode].fetchOptions}
+          />}/>
           <Route path="UserList" element={<UsersList/>}/>
           <Route path="ProductsList" element={<ProductsList/>}/>
           <Route path="Orders" element={<Orders/>}/>
@@ -86,11 +105,11 @@ const App = () => {
   return (
     <div className='text-default min-h-screen text-gray-700 bg-white'>
       {showUserLogin ? <AuthForm 
-      loginUrl={endpoints[mode].loginUrl}
-      registerUrl={endpoints[mode].registerUrl}
-      fetchOptions={endpoints[mode].fetchOptions}
-      forgotPasswordUrl={endpoints[mode].forgotPasswordUrl}
-      resetPasswordUrl={endpoints[mode].resetPasswordUrl}
+      loginUrl={endpointsAuth[mode].loginUrl}
+      registerUrl={endpointsAuth[mode].registerUrl}
+      fetchOptions={endpointsAuth[mode].fetchOptions}
+      forgotPasswordUrl={endpointsAuth[mode].forgotPasswordUrl}
+      resetPasswordUrl={endpointsAuth[mode].resetPasswordUrl}
       /> : null}
       <RouterProvider router={router}/>
     </div>

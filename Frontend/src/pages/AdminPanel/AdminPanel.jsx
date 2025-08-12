@@ -10,7 +10,7 @@ const AdminPanel = () => {
 const navigate = useNavigate();
 
 
-const {setHiddenNavBar, setUser,setRole } = useLoginContext();
+const {setHiddenNavBar, setUser,setRole, mode } = useLoginContext();
   useEffect(() => {
     setHiddenNavBar(true);
   }, []);
@@ -22,11 +22,55 @@ const {setHiddenNavBar, setUser,setRole } = useLoginContext();
 
 const logout = async () =>
     {
-        setHiddenNavBar(false);
-        setUser(null);
-        setRole(null);
-        navigate("/");
-        localStorage.removeItem("token");
+        if(mode === "MongoJWT"){
+            const response = await fetch('http://localhost:3000/api/v6/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+            localStorage.removeItem("token");
+        }else if(mode === "MongoSession"){
+            const response = await fetch('http://localhost:3000/api/v5/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+        }else if(mode === "MysqlSession"){
+            const response = await fetch('http://localhost:3000/api/v4/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+        }else if(mode === "MysqlJWT"){
+            const response = await fetch('http://localhost:3000/api/v7/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response.message);
+            setUser(null);
+            setRole(null);
+            navigate("/");
+            localStorage.removeItem("token");
+        }
     }
 
   return (

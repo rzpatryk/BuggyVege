@@ -8,7 +8,7 @@ const authController = new MongoJWTAuthController();
 const productController = new MongoJWTProductController();
 const walletController = new MongoJWTWalletController
 const reviewController = new MongoSessionReviewController();
-const { uploadReviewImages } = require('../Utils/multerConfig');
+const { uploadReviewImages, uploadProductImages } = require('../Utils/multerConfig');
 // Routes dla MongoDB z JWT
 router.post('/register', authController.register);
 router.post('/login', authController.login);
@@ -23,7 +23,7 @@ router.patch('/reset-password', authController.resetPassword);
 router.get('/products', productController.getAllProducts);
 router.get('/products/:id', productController.getProduct);
 router.get('/products/:id/reviews', productController.getProductWithReviews);
-router.post('/addProducts', authController.protect, authController.restrict('admin'), productController.addProduct);
+router.post('/addProducts', authController.protect, authController.restrict('admin'), uploadProductImages, productController.addProduct);
 router.put('/updateProducts/:id', authController.protect, authController.restrict('admin'), productController.updateProduct);
 router.delete('/deleteProducts/:id', authController.protect, authController.restrict('admin'), productController.deleteProduct);
 

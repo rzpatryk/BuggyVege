@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import upload_area from "../../assets/upload_area.png"
 
-const AddProduct = () => {
+const AddProduct = ({ addProductUrl, fetchOptions }) => {
 
   const categories = [
   {
@@ -59,21 +59,23 @@ const AddProduct = () => {
     event.preventDefault();
     const formData = new FormData();
     formData.append('name', name);
+    formData.append('descriptions', description);
     formData.append('category', category);
     formData.append('price', price);
     formData.append('offerPrice', offerPrice);
-    formData.append('descriptions', description); 
 
     for (let i = 0; i < files.length; i++) {
       formData.append('images', files[i]); // nazwę musi rozpoznać multer
     }
   try {
-    const res = await fetch('http://localhost:3000/api/v1/admin/AddProduct', {
+    const res = await fetch(addProductUrl, {
     method: 'POST',
+    ...fetchOptions,
     body: formData, // NIE ustawiaj nagłówka 'Content-Type' – browser zrobi to automatycznie
   });
 
   if (!res.ok) {
+    console.log(res);
     throw new Error('Błąd przy dodawaniu produktu');
   }
 
