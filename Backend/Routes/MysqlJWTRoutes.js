@@ -3,7 +3,7 @@ const MysqlJWTAuthController = require('../Controllers/MysqlJWTAuthController');
 const MysqlJWTProductController = require('../Controllers/ProductControllers/MysqlJWTProductController');
 const MysqlJWTWalletController = require('../Controllers/WalletControllers/MysqlJWTWalletController');
 const MysqlJWTReviewController = require('../Controllers/ReviewControllers/MysqlJWTReviewController');
-const { uploadReviewImages } = require('../Utils/multerConfig');
+const { uploadReviewImages, uploadProductImages } = require('../Utils/multerConfig');
 const router = express.Router();
 const authController = new MysqlJWTAuthController();
 const productController = new MysqlJWTProductController();
@@ -23,7 +23,7 @@ router.patch('/reset-password', authController.resetPassword);
 router.get('/products', productController.getAllProducts);
 router.get('/products/:id', productController.getProduct);
 router.get('/products/:id/reviews', productController.getProductWithReviews);
-router.post('/addProducts', authController.protect, authController.restrict('admin'), productController.addProduct);
+router.post('/addProducts', authController.protect, authController.restrict('admin'),uploadProductImages,productController.addProduct);
 router.put('/updateProducts/:id', authController.protect, authController.restrict('admin'), productController.updateProduct);
 router.delete('/deleteProducts/:id', authController.protect, authController.restrict('admin'), productController.deleteProduct);
 

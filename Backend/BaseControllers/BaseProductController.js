@@ -11,8 +11,9 @@ class BaseProductController {
         try {
             const { name, descriptions, category, price, offerPrice } = req.body;
             // req.files jest uzupełnione przez multer w routerze
+            console.log('Received files:', req.files);
             const imagePaths = req.files ? req.files.map(file => file.path) : [];
-
+            //console.log(imagePaths);
             const product = await this.productService.createProduct({
                 name,
                 descriptions,
@@ -21,7 +22,7 @@ class BaseProductController {
                 offerPrice,
                 images: imagePaths
             });
-
+            //console.log(product);
             res.status(201).json({ 
                 status: 'success',
                 message: 'Produkt zapisany', 

@@ -8,12 +8,24 @@ class MySQLProductAdapter extends ProductDatabaseAdapter {
 
     async createProduct(productData) {
         const { name, descriptions, category, price, offerPrice, images } = productData;
+        console.log('Creating product:', productData);
         
-        const descriptionsString = descriptions.split(',').map(s => s.trim()).join(',');
+        //const descriptionsString = descriptions.split(',').map(s => s.trim()).join(',');
+        let descriptionsString;
+        if (Array.isArray(descriptions)) {
+            descriptionsString = descriptions.join(',');
+        } else if (typeof descriptions === 'string') {
+         try {
+            const parsed = JSON.parse(descriptions);
+            descriptionsString = Array.isArray(parsed) ? parsed.join(',') : descriptions;
+        } catch {
+            descriptionsString = descriptions;
+        }
+}
         const imagesString = images.join(',');
         
         const [result] = await this.pool.execute(`
-            INSERT INTO products (name, descriptions, category, price, offer_price, images)
+            INSERT INTO products2 (name, descriptions, category, price, offer_price, images)
             VALUES (?, ?, ?, ?, ?, ?)
         `, [name, descriptionsString, category, parseFloat(price), parseFloat(offerPrice), imagesString]);
         
@@ -22,7 +34,7 @@ class MySQLProductAdapter extends ProductDatabaseAdapter {
 
     async getProductById(productId) {
         const [products] = await this.pool.execute(`
-            SELECT * FROM products WHERE id = ?
+            SELECT * FROM products2 WHERE id = ?
         `, [productId]);
         
         if (products[0]) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import upload_area from "../../assets/upload_area.png"
-
+import { useLoginContext } from '../../context/LoginContext';
 const AddProduct = ({ addProductUrl, fetchOptions }) => {
 
   const categories = [
@@ -50,16 +50,19 @@ const AddProduct = ({ addProductUrl, fetchOptions }) => {
 
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [descriptions, setDescriptions] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
-  
+  const {mode} = useLoginContext();
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    console.log("Token:", localStorage.getItem("token"));
+    console.log("URL:", addProductUrl);
+    console.log("fetchOptions:", fetchOptions);
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('descriptions', description);
+    formData.append('descriptions',  JSON.stringify(descriptions));
     formData.append('category', category);
     formData.append('price', price);
     formData.append('offerPrice', offerPrice);
@@ -69,9 +72,15 @@ const AddProduct = ({ addProductUrl, fetchOptions }) => {
     }
   try {
     const res = await fetch(addProductUrl, {
-    method: 'POST',
-    ...fetchOptions,
-    body: formData, // NIE ustawiaj nagłówka 'Content-Type' – browser zrobi to automatycznie
+     method: 'POST',
+      ...fetchOptions,
+      headers: (mode === "MongoJWT" || mode === "MysqlJWT")
+        ? {
+            ...(fetchOptions.headers || {}),
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        : fetchOptions.headers,
+      body: formData
   });
 
   if (!res.ok) {
@@ -113,7 +122,7 @@ const AddProduct = ({ addProductUrl, fetchOptions }) => {
                 </div>
                 <div className="flex flex-col gap-1 max-w-md">
                     <label className="text-base font-medium" htmlFor="product-description">Product Description</label>
-                    <textarea onChange={(e) => setDescription(e.target.value)} value={description}
+                    <textarea onChange={(e) => setDescriptions(e.target.value)} value={descriptions}
                      id="product-description" rows={4} className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none" placeholder="Type here"></textarea>
                 </div>
                 <div className="w-full flex flex-col gap-1">

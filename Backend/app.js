@@ -21,8 +21,8 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Serwuj statyczne pliki z folderu uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-//app.use('/uploads', express.static('uploads'));
+//app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 app.use((req, res, next)=>{
     req.requestedAt = new Date().toISOString();
     next();

@@ -8,7 +8,7 @@ const authController = new MysqlSessionAuthController();
 const productController = new MysqlSessionProductController();
 const walletController = new MysqlSessionWalletController();
 const reviewController = new MysqlSessionReviewController();
-const { uploadReviewImages } = require('../Utils/multerConfig');
+const { uploadReviewImages, uploadProductImages } = require('../Utils/multerConfig');
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/profile', authController.protect, authController.getProfile);
@@ -21,14 +21,14 @@ router.patch('/reset-password', authController.resetPassword);
 router.get('/products', productController.getAllProducts);
 router.get('/products/:id', productController.getProduct);
 router.get('/products/:id/reviews', productController.getProductWithReviews);
-router.post('/addProducts', authController.protect, authController.restrict('admin'), productController.addProduct);
+router.post('/addProducts', authController.protect, authController.restrict('admin'), uploadProductImages, productController.addProduct);
 router.put('/updateProducts/:id', authController.protect, authController.restrict('admin'), productController.updateProduct);
 router.delete('/deleteProducts/:id', authController.protect, authController.restrict('admin'), productController.deleteProduct);
 
 // Wallet routes
 router.get('/wallet/balance', authController.protect, walletController.getWalletBalance);
 router.post('/wallet/deposit', authController.protect, walletController.depositToWallet);
-router.get('/wallet/transactions', authController.protect, walletController.getTransactionHistory);
+router.get('/wallet/transactions', authController.protect, walletController.getTransactionHistory); 
 router.post('/wallet/purchase', authController.protect, walletController.purchaseWithWallet);
 router.get('/wallet/orders', authController.protect, walletController.getOrderHistory);
 router.get('/wallet/orders/:orderId', authController.protect, walletController.getOrderDetails);

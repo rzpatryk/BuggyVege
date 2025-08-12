@@ -4,6 +4,7 @@ class ProductService {
     }
 
     async createProduct(productData) {
+        console.log('Creating product with data:', productData);
         const { name, descriptions, category, price, offerPrice, images } = productData;
         
         // Walidacja
@@ -27,7 +28,7 @@ class ProductService {
             offerPrice: offerPrice || price,
             images: images || []
         });
-
+        //console.log(product);
         return product;
     }
 

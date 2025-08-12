@@ -65,7 +65,7 @@ const endpointsAuth = {
         addProductUrl: 'http://localhost:3000/api/v6/auth/addProducts',
         fetchOptions: {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem("token")}`
+            
           }
         }
       },
@@ -73,14 +73,23 @@ const endpointsAuth = {
         addProductUrl: 'http://localhost:3000/api/v5/auth/addProducts',
         fetchOptions: {
           credentials: 'include',
-          headers: {
-            //'Authorization': `Bearer ${localStorage.getItem("token")}`
-            //'Content-Type': 'application/json'
-          }
+        }
+      },
+      MysqlJWT:{
+        addProductUrl: 'http://localhost:3000/api/v7/auth/addProducts',
+        fetchOptions: {
+        headers: {
+          
         }
       }
-
+    },
+      MysqlSession:{
+        addProductUrl: 'http://localhost:3000/api/v4/auth/addProducts',
+        fetchOptions: {
+        credentials: 'include'
+      }
     }
+}
 
 const App = () => {
   const {showUserLogin, role,mode} = useLoginContext();

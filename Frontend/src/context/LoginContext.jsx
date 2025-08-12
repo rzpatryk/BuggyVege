@@ -7,7 +7,7 @@ export const LoginContextProvider = ({children}) => {
     const [user, setUser] = useState(null);
     const [showUserLogin, setShowUserLogin] = useState(false);
     const [role, setRole] = useState(null);
-    const [mode, setMode] = useState("MongoSession");
+    const [mode, setMode] = useState("MysqlSession");
     const [hiddenNavBar, setHiddenNavBar] = useState(false);
 
 
